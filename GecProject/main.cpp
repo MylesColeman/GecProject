@@ -41,14 +41,14 @@ int main()
 
     // Create a sprite and apply a texture
     sf::Texture texture;
-    if (!texture.loadFromFile("Data/Textures/MaleZombie/Attack (1).png"));
+    if (!texture.loadFromFile("Data/Textures/MaleZombie/Attack (1).png"))
     {
         std::cout << "Texture could not be loaded!" << std::endl;
         return -1;
     }
 
 	sf::Sprite sprite(texture);
-	sprite.setPosition({ 400.f, 300.f });
+	sprite.setPosition({ 100.f, 100.f });
     
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -79,6 +79,7 @@ int main()
        
         // Draw the shape
         window.draw(shape);
+        window.draw(sprite);
 
         // UI needs drawing last
         ImGui::SFML::Render(window);
