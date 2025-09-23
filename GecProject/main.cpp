@@ -40,7 +40,7 @@ int main()
     shape.setFillColor(sf::Color::Green);
 
     // Create a sprite and apply a texture
-    sf::Texture texture;
+    /*sf::Texture texture;
     if (!texture.loadFromFile("Data/Textures/MaleZombie/Attack (1).png"))
     {
         std::cout << "Texture could not be loaded!" << std::endl;
@@ -48,7 +48,17 @@ int main()
     }
 
 	sf::Sprite sprite(texture);
-	sprite.setPosition({ 100.f, 100.f });
+	sprite.setPosition({ 100.f, 100.f });*/
+
+    // Loading a sprite sheet, then using that to create an animation for a sprite
+    sf::Texture zombieAttackSpriteSheet;
+    if (!zombieAttackSpriteSheet.loadFromFile("Data/Textures/MaleZombie/attack_combined.png"))
+    {
+        std::cout << "Texture could not be loaded!" << std::endl;
+        return -1;
+    }
+    sf::Sprite zombieSprite(zombieAttackSpriteSheet);
+    zombieSprite.setTextureRect(sf::IntRect({ 0, 0 }, { 64, 64 })); // Set the initial frame
     
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -79,7 +89,8 @@ int main()
        
         // Draw the shape
         window.draw(shape);
-        window.draw(sprite);
+        //window.draw(sprite);
+		window.draw(zombieSprite);
 
         // UI needs drawing last
         ImGui::SFML::Render(window);
