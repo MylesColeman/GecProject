@@ -12,6 +12,8 @@
 void DefineGUI();
 
 float shapeRadius{ 50.f };
+float shapeXPos{ 100.f };
+float shapeYPos{ 100.f }; 
 
 int main()
 {
@@ -36,6 +38,17 @@ int main()
     // Create a simple shape to draw
     sf::CircleShape shape(shapeRadius);
     shape.setFillColor(sf::Color::Green);
+
+    // Create a sprite and apply a texture
+    sf::Texture texture;
+    if (!texture.loadFromFile("Data/Textures/MaleZombie/Attack (1).png"));
+    {
+        std::cout << "Texture could not be loaded!" << std::endl;
+        return -1;
+    }
+
+	sf::Sprite sprite(texture);
+	sprite.setPosition({ 400.f, 300.f });
     
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -58,6 +71,8 @@ int main()
 
         // The UI gets defined each time
         DefineGUI();
+        shape.setPosition({ shapeXPos, shapeYPos });
+		shape.setRadius(shapeRadius);
 
         // Clear the window
         window.clear();
@@ -98,8 +113,8 @@ void DefineGUI()
   //  ImGui::Checkbox("Cull Face", &m_cullFace);
 
     ImGui::SliderFloat("Shape Radius", &shapeRadius, 10.f, 300.f);	// Slider from 1.0 to 100.0
-    //ImGui::SliderFloat("X Position", &shapeXPos, 0.01f, 0.3f);	// Slider from 0.0 to 1.0
-    //ImGui::SliderFloat("Y Position", &shapeYPos, 0.01f, 0.3f);	// Slider from 0.0 to 1.0
+    ImGui::SliderFloat("X Position", &shapeXPos, 0.f, 700.f);	// Slider from 0.0 to 1.0
+    ImGui::SliderFloat("Y Position", &shapeYPos, 0.f, 500.f);	// Slider from 0.0 to 1.0
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
