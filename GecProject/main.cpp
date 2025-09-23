@@ -58,7 +58,8 @@ int main()
         return -1;
     }
     sf::Sprite zombieSprite(zombieAttackSpriteSheet);
-    zombieSprite.setTextureRect(sf::IntRect({ 0, 0 }, { 64, 64 })); // Set the initial frame
+	zombieSprite.setPosition({ 100.f, 100.f });
+    zombieSprite.setTextureRect(sf::IntRect({ 0, 0 }, { 432, 519 })); // Sets the initial frame
     
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
