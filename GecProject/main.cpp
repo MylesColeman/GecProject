@@ -59,7 +59,20 @@ int main()
     }
     sf::Sprite zombieSprite(zombieAttackSpriteSheet);
 	zombieSprite.setPosition({ 100.f, 100.f });
-    zombieSprite.setTextureRect(sf::IntRect({ 0, 0 }, { 432, 519 })); // Sets the initial frame
+
+	const int frameWidth = 432;  // Width of a single frame
+	const int frameHeight = 519; // Height of a single frame
+
+	const int totalFrames = zombieAttackSpriteSheet.getSize().y / frameHeight; // Total number of frames in the sprite sheet
+	int currentFrame = 0; // Current frame index
+
+    sf::IntRect frameRect({ 0, 0 }, { frameWidth, frameHeight });
+
+    zombieSprite.setTextureRect(frameRect); // Sets the initial frame
+
+    sf::Clock animClock;
+
+
     
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -89,7 +102,7 @@ int main()
         window.clear();
        
         // Draw the shape
-        window.draw(shape);
+        //window.draw(shape);
         //window.draw(sprite);
 		window.draw(zombieSprite);
 
@@ -125,9 +138,9 @@ void DefineGUI()
 
   //  ImGui::Checkbox("Cull Face", &m_cullFace);
 
-    ImGui::SliderFloat("Shape Radius", &shapeRadius, 10.f, 300.f);	// Slider from 1.0 to 100.0
-    ImGui::SliderFloat("X Position", &shapeXPos, 0.f, 700.f);	// Slider from 0.0 to 1.0
-    ImGui::SliderFloat("Y Position", &shapeYPos, 0.f, 500.f);	// Slider from 0.0 to 1.0
+    //ImGui::SliderFloat("Shape Radius", &shapeRadius, 10.f, 300.f);	// Slider from 1.0 to 100.0
+    //ImGui::SliderFloat("X Position", &shapeXPos, 0.f, 700.f);	// Slider from 0.0 to 1.0
+    //ImGui::SliderFloat("Y Position", &shapeYPos, 0.f, 500.f);	// Slider from 0.0 to 1.0
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
