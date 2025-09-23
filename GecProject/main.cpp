@@ -58,22 +58,21 @@ int main()
         return -1;
     }
     sf::Sprite zombieSprite(zombieAttackSpriteSheet);
+
+    const int numFrames = 8;
+    const int spriteWidth = zombieAttackSpriteSheet.getSize().x;
+    const int spriteHeight = zombieAttackSpriteSheet.getSize().y / numFrames; // As the number of frames are known, we can divide the total height by this to get the individual sprite height
+    int currentFrame = 0;
+
+    int intRectsYPos = 0;
+
 	zombieSprite.setPosition({ 100.f, 100.f });
+    zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { spriteWidth, spriteHeight })); // Sets the initial frame
 
-	const int frameWidth = 432;  // Width of a single frame
-	const int frameHeight = 519; // Height of a single frame
-
-	const int totalFrames = zombieAttackSpriteSheet.getSize().y / frameHeight; // Total number of frames in the sprite sheet
-	int currentFrame = 0; // Current frame index
-
-    sf::IntRect frameRect({ 0, 0 }, { frameWidth, frameHeight });
-
-    zombieSprite.setTextureRect(frameRect); // Sets the initial frame
-
+    // To update the sprite
     sf::Clock animClock;
+    float timeBetweenFrames = 0.1f;  // New frame every 0.1 seconds
 
-
-    
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
   
@@ -97,6 +96,24 @@ int main()
         DefineGUI();
         shape.setPosition({ shapeXPos, shapeYPos });
 		shape.setRadius(shapeRadius);
+
+        // After the set time, updates to the next sprite
+        if (animClock.getElapsedTime().asSeconds() > timeBetweenFrames)
+        {
+            intRectsYPos += spriteHeight;
+            currentFrame++;
+
+            // If reached the last frame, loops back around
+            if (currentFrame >= numFrames)
+            {
+                currentFrame = 0;
+                intRectsYPos = 0;
+            }
+                
+            zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { spriteWidth, spriteHeight }));
+
+            animClock.restart();
+        }
 
         // Clear the window
         window.clear();
@@ -130,9 +147,9 @@ void DefineGUI()
 
     ImGui::Begin("GEC");				// Create a window called "3GP" and append into it.
 
-    ImGui::Text("Some Text.");	      	// Display some text (you can use a format strings too)	
+    //ImGui::Text("Some Text.");	      	// Display some text (you can use a format strings too)	
 
-    ImGui::Button("Button");			// Buttons return true when clicked (most widgets return true when edited/activated)
+    //ImGui::Button("Button");			// Buttons return true when clicked (most widgets return true when edited/activated)
     
  //   ImGui::Checkbox("Wireframe", &m_wireframe);	// A checkbox linked to a member variable
 
