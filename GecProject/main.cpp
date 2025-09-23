@@ -11,6 +11,8 @@
 
 void DefineGUI();
 
+float shapeRadius{ 50.f };
+
 int main()
 {
     // Redirect cout to the Visual Studio output pane
@@ -32,7 +34,7 @@ int main()
         return -1;
 
     // Create a simple shape to draw
-    sf::CircleShape shape(100.f);
+    sf::CircleShape shape(shapeRadius);
     shape.setFillColor(sf::Color::Green);
     
     // Clock required by ImGui
@@ -95,7 +97,9 @@ void DefineGUI()
 
   //  ImGui::Checkbox("Cull Face", &m_cullFace);
 
-   // ImGui::SliderFloat("Speed", &gAnimationSpeed, 0.01f, 0.3f);	// Slider from 0.0 to 1.0
+    ImGui::SliderFloat("Shape Radius", &shapeRadius, 10.f, 300.f);	// Slider from 1.0 to 100.0
+    //ImGui::SliderFloat("X Position", &shapeXPos, 0.01f, 0.3f);	// Slider from 0.0 to 1.0
+    //ImGui::SliderFloat("Y Position", &shapeYPos, 0.01f, 0.3f);	// Slider from 0.0 to 1.0
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
