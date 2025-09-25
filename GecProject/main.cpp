@@ -6,6 +6,8 @@
 #include "ExternalHeaders.h"
 #include "RedirectCout.h"
 
+#include "TextureManager.h"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
@@ -33,15 +35,14 @@ int main()
     if (!ImGui::SFML::Init(window))
         return -1;
 
-    // Loading a sprite sheet, then using that to create an animation for a sprite
-    sf::Texture zombieAttackSpriteSheet;
-    if (!zombieAttackSpriteSheet.loadFromFile("Data/Textures/MaleZombie/attack_combined.png"))
-    {
-        std::cout << "Texture could not be loaded!" << std::endl;
-        return -1;
-    }
+    // Loading a texture, through the texture manager class, then applying it to our sprite
+    TextureManager textureManager;
+    
+    sf::Texture& zombieAttackSpriteSheet = textureManager.getTexture("Data/Textures/MaleZombie/attack_combined.png");
     sf::Sprite zombieSprite(zombieAttackSpriteSheet);
 
+
+    // Animation Logic
     const int numFrames = 8;
     const int spriteWidth = zombieAttackSpriteSheet.getSize().x;
     const int spriteHeight = zombieAttackSpriteSheet.getSize().y / numFrames; // As the number of frames are known, we can divide the total height by this to get the individual sprite height
