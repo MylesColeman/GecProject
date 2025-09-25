@@ -7,13 +7,12 @@
 #include "RedirectCout.h"
 
 #include "TextureManager.h"
+#include "AnimationManager.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-void DefineGUI();
-
-float timeBetweenFrames{ 0.1f }; // How often the sprite is updated - animated
+void DefineGUI(float* animationSpeed);
 
 int main()
 {
@@ -35,23 +34,21 @@ int main()
     if (!ImGui::SFML::Init(window))
         return -1;
 
-    // Loading a texture, through the texture manager class, then applying it to our sprite
-    TextureManager textureManager;
-    
-    sf::Texture& zombieAttackSpriteSheet = textureManager.getTexture("Data/Textures/MaleZombie/attack_combined.png");
-    sf::Sprite zombieSprite(zombieAttackSpriteSheet);
-
-
     // Animation Logic
-    const int numFrames = 8;
-    const int spriteWidth = zombieAttackSpriteSheet.getSize().x;
-    const int spriteHeight = zombieAttackSpriteSheet.getSize().y / numFrames; // As the number of frames are known, we can divide the total height by this to get the individual sprite height
+    TextureManager textureManager;
+    AnimationManager animationManager(textureManager);
+    animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
+    const Animation& zombieAttackAnim = animationManager.getAnimation("zombieAttack");
+
+    float animationSpeed = zombieAttackAnim.timeBetweenFrames;
+
+    sf::Sprite zombieSprite(*zombieAttackAnim.texture);
+    zombieSprite.setPosition({ 100.f, 100.f });
+
     int currentFrame = 0;
-
     int intRectsYPos = 0;
-
-	zombieSprite.setPosition({ 100.f, 100.f });
-    zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { spriteWidth, spriteHeight })); // Sets the initial frame
+    
+    zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { zombieAttackAnim.spriteWidth, zombieAttackAnim.spriteHeight })); // Sets the initial frame
 
     // To update the sprite
     sf::Clock animClock;
@@ -76,22 +73,22 @@ int main()
         ImGui::SFML::Update(window, uiDeltaClock.restart());
 
         // The UI gets defined each time
-        DefineGUI();
+        DefineGUI(&animationSpeed);
 
         // After the set time, updates to the next sprite
-        if (animClock.getElapsedTime().asSeconds() > timeBetweenFrames)
+        if (animClock.getElapsedTime().asSeconds() > animationSpeed)
         {
-            intRectsYPos += spriteHeight;
+            intRectsYPos += zombieAttackAnim.spriteHeight;
             currentFrame++;
 
             // If reached the last frame, loops back around
-            if (currentFrame >= numFrames)
+            if (currentFrame >= zombieAttackAnim.numFrames)
             {
                 currentFrame = 0;
                 intRectsYPos = 0;
             }
                 
-            zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { spriteWidth, spriteHeight }));
+            zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { zombieAttackAnim.spriteWidth, zombieAttackAnim.spriteHeight }));
 
             animClock.restart();
         }
@@ -118,7 +115,7 @@ int main()
     Use IMGUI for a simple on screen GUI
     See: https://github.com/ocornut/imgui/wiki/
 */
-void DefineGUI()
+void DefineGUI(float* animationSpeed)
 {
     // Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -133,7 +130,7 @@ void DefineGUI()
 
   //  ImGui::Checkbox("Cull Face", &m_cullFace);
 
-    ImGui::SliderFloat("Animation Speed", &timeBetweenFrames, 0.01f, 1.f);	// Slider from 1.0 to 100.0
+    ImGui::SliderFloat("Animation Speed", animationSpeed, 0.01f, 1.f);	// Slider from 1.0 to 100.0
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

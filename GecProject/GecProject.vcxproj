@@ -146,6 +146,7 @@
     <ClCompile Include="RedirectCout.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="ExternalHeaders.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

@@ -8,20 +8,20 @@ class TextureManager
 {
 public:
 	// Creates a method that checks whether the texture has already been loaded, if so it doesn't load it again. If not it attemps to load it.
-	sf::Texture& getTexture(const std::string& filename)
+	sf::Texture& getTexture(const std::string& filePath)
 	{
 		// A check whether the texture hasn't been loaded
-		if (textures.find(filename) == textures.end())
+		if (m_textures.find(filePath) == m_textures.end())
 		{
 			sf::Texture texture;
-			if (!texture.loadFromFile(filename))
-				std::cout << "Texture " << filename << " could not be loaded!" << std::endl;
+			if (!texture.loadFromFile(filePath))
+				std::cout << "Texture " << filePath << " could not be loaded!" << std::endl;
 			else
-				textures[filename] = texture;
+				m_textures[filePath] = texture;
 		}
 
-		return textures.at(filename); // Returns the texture, either if already loaded, or just loaded
+		return m_textures.at(filePath); // Returns the texture, either if already loaded, or just loaded
 	}
 private:
-	std::map<std::string, sf::Texture> textures;
+	std::map<std::string, sf::Texture> m_textures;
 };
