@@ -11,6 +11,8 @@
 
 void DefineGUI();
 
+float timeBetweenFrames{ 0.1f }; // How often the sprite is updated - animated
+
 int main()
 {
     // Redirect cout to the Visual Studio output pane
@@ -52,7 +54,6 @@ int main()
 
     // To update the sprite
     sf::Clock animClock;
-    float timeBetweenFrames = 0.1f;  // New frame every 0.1 seconds
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -131,7 +132,7 @@ void DefineGUI()
 
   //  ImGui::Checkbox("Cull Face", &m_cullFace);
 
-    //ImGui::SliderFloat("Shape Radius", &shapeRadius, 10.f, 300.f);	// Slider from 1.0 to 100.0
+    ImGui::SliderFloat("Animation Speed", &timeBetweenFrames, 0.01f, 1.f);	// Slider from 1.0 to 100.0
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
