@@ -5,14 +5,13 @@
 
 #include "ExternalHeaders.h"
 #include "RedirectCout.h"
-
 #include "TextureManager.h"
 #include "AnimationManager.h"
 #include "SpriteAnimator.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-void DefineGUI();
+void DefineGUI(SpriteAnimator* zombie, AnimationManager* animManager);
 
 // Used by ImGUI dropdown (combo) box
 const char* items[] = { "Idle", "Walk", "Attack", "Death" };
@@ -50,7 +49,6 @@ int main()
     animationManager.configureAnimation("zombieDeath", "Data/Textures/MaleZombie/dead_combined.png", 12);
 
     SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Defaults to Idle Animation
-    zombie.setAnimation(animationManager.getAnimation("zombieIdle"));
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -72,7 +70,7 @@ int main()
         ImGui::SFML::Update(window, uiDeltaClock.restart());
 
         // The UI gets defined each time
-        DefineGUI();
+        DefineGUI(&zombie, &animationManager);
 
         zombie.update();
 
@@ -98,7 +96,7 @@ int main()
     Use IMGUI for a simple on screen GUI
     See: https://github.com/ocornut/imgui/wiki/
 */
-void DefineGUI()
+void DefineGUI(SpriteAnimator* zombie, AnimationManager* animManager)
 {
     // Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -122,7 +120,12 @@ void DefineGUI()
         {
             bool is_selected = (current_item == items[i]);
             if (ImGui::Selectable(items[i], is_selected))
+            {
                 current_item = items[i];
+
+                std::string animName = "zombie" + std::string(current_item);
+                zombie->setAnimation(animManager->getAnimation(animName));
+            }
             if (is_selected)
 				ImGui::SetItemDefaultFocus();
         }
