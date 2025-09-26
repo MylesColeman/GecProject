@@ -44,6 +44,10 @@ int main()
     SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Defaults to Idle Animation
     zombie.setAnimation(animationManager.getAnimation("zombieIdle"));
 
+    // Zombie Walk Animation Setup
+    animationManager.configureAnimation("zombieWalk", "Data/Textures/MaleZombie/walk_combined.png", 10);
+    zombie.setAnimation(animationManager.getAnimation("zombieWalk"));
+
     // Zombie Attack Animation Setup
     animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
     zombie.setAnimation(animationManager.getAnimation("zombieAttack"));
@@ -113,7 +117,7 @@ void DefineGUI()
 
     //ImGui::Checkbox("Cull Face", &m_cullFace);
 
-    //ImGui::SliderFloat("Animation Speed", animationSpeed, 0.01f, 1.f);
+    //ImGui::SliderFloat("Animation Speed", currentAnimation, 1.f, 3.f);
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
