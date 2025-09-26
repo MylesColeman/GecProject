@@ -13,7 +13,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-void DefineGUI(float* animationSpeed);
+void DefineGUI();
 
 int main()
 {
@@ -38,12 +38,19 @@ int main()
     // Animation Logic
     TextureManager textureManager;
     AnimationManager animationManager(textureManager);
-    animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
 
-    SpriteAnimator zombie;
+    // Zombie Idle Animation Setup
+    animationManager.configureAnimation("zombieIdle", "Data/Textures/MaleZombie/idle_combined.png", 15);
+    SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Defaults to Idle Animation
+    zombie.setAnimation(animationManager.getAnimation("zombieIdle"));
+
+    // Zombie Attack Animation Setup
+    animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
     zombie.setAnimation(animationManager.getAnimation("zombieAttack"));
 
-    //float animationSpeed = zombieAttackAnim.timeBetweenFrames;  - Fix later
+	// Zombie Death Animation Setup
+    animationManager.configureAnimation("zombieDeath", "Data/Textures/MaleZombie/dead_combined.png", 12);
+    zombie.setAnimation(animationManager.getAnimation("zombieDeath"));
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -65,7 +72,7 @@ int main()
         ImGui::SFML::Update(window, uiDeltaClock.restart());
 
         // The UI gets defined each time
-        DefineGUI(&animationSpeed);
+        DefineGUI();
 
         zombie.update();
 
@@ -91,22 +98,22 @@ int main()
     Use IMGUI for a simple on screen GUI
     See: https://github.com/ocornut/imgui/wiki/
 */
-void DefineGUI(float* animationSpeed)
+void DefineGUI()
 {
     // Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    ImGui::Begin("GEC");				// Create a window called "3GP" and append into it.
+    ImGui::Begin("GEC"); // Create a window called "3GP" and append into it.
 
-    //ImGui::Text("Some Text.");	      	// Display some text (you can use a format strings too)	
+    //ImGui::Text("Some Text."); // Display some text (you can use a format strings too)	
 
-    //ImGui::Button("Button");			// Buttons return true when clicked (most widgets return true when edited/activated)
+    //ImGui::Button("Button"); // Buttons return true when clicked (most widgets return true when edited/activated)
     
- //   ImGui::Checkbox("Wireframe", &m_wireframe);	// A checkbox linked to a member variable
+    //ImGui::Checkbox("Wireframe", &m_wireframe); // A checkbox linked to a member variable
 
-  //  ImGui::Checkbox("Cull Face", &m_cullFace);
+    //ImGui::Checkbox("Cull Face", &m_cullFace);
 
-    ImGui::SliderFloat("Animation Speed", animationSpeed, 0.01f, 1.f);	// Slider from 1.0 to 100.0
+    //ImGui::SliderFloat("Animation Speed", animationSpeed, 0.01f, 1.f);
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
