@@ -115,7 +115,8 @@ void DefineGUI()
 
     //ImGui::SliderFloat("Animation Speed", currentAnimation, 1.f, 3.f);
 
-    if (ImGui::BeginCombo("Animation", current_item))
+	// Dropdown (combo) box to select animation
+	if (ImGui::BeginCombo("Animation", current_item)) // Sets the default value to current_item (which is initially idle)
     {
         for (int i = 0; i < IM_ARRAYSIZE(items); i++)
         {
