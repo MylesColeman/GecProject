@@ -9,11 +9,14 @@
 #include "TextureManager.h"
 #include "AnimationManager.h"
 #include "SpriteAnimator.h"
-
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 void DefineGUI();
+
+// Used by ImGUI dropdown (combo) box
+const char* items[] = { "Idle", "Walk", "Attack", "Death" };
+static const char* current_item = "Idle";
 
 int main()
 {
@@ -39,22 +42,15 @@ int main()
     TextureManager textureManager;
     AnimationManager animationManager(textureManager);
 
-    // Zombie Idle Animation Setup
+    // Zombie Animation Setup
+	//Loading the sprite sheets and configuring the animations
     animationManager.configureAnimation("zombieIdle", "Data/Textures/MaleZombie/idle_combined.png", 15);
+    animationManager.configureAnimation("zombieWalk", "Data/Textures/MaleZombie/walk_combined.png", 10);
+    animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
+    animationManager.configureAnimation("zombieDeath", "Data/Textures/MaleZombie/dead_combined.png", 12);
+
     SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Defaults to Idle Animation
     zombie.setAnimation(animationManager.getAnimation("zombieIdle"));
-
-    // Zombie Walk Animation Setup
-    animationManager.configureAnimation("zombieWalk", "Data/Textures/MaleZombie/walk_combined.png", 10);
-    zombie.setAnimation(animationManager.getAnimation("zombieWalk"));
-
-    // Zombie Attack Animation Setup
-    animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
-    zombie.setAnimation(animationManager.getAnimation("zombieAttack"));
-
-	// Zombie Death Animation Setup
-    animationManager.configureAnimation("zombieDeath", "Data/Textures/MaleZombie/dead_combined.png", 12);
-    zombie.setAnimation(animationManager.getAnimation("zombieDeath"));
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -118,6 +114,19 @@ void DefineGUI()
     //ImGui::Checkbox("Cull Face", &m_cullFace);
 
     //ImGui::SliderFloat("Animation Speed", currentAnimation, 1.f, 3.f);
+
+    if (ImGui::BeginCombo("Animation", current_item))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+        {
+            bool is_selected = (current_item == items[i]);
+            if (ImGui::Selectable(items[i], is_selected))
+                current_item = items[i];
+            if (is_selected)
+				ImGui::SetItemDefaultFocus();
+        }
+		ImGui::EndCombo();
+    }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
