@@ -48,7 +48,8 @@ int main()
     animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
     animationManager.configureAnimation("zombieDeath", "Data/Textures/MaleZombie/dead_combined.png", 12);
 
-    SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Defaults to Idle Animation
+    SpriteAnimator zombie(animationManager.getAnimation("zombieIdle")); // Loads the idle animation
+    zombie.setAnimation(animationManager.getAnimation("zombieIdle")); // Plays the idle animation
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -116,23 +117,25 @@ void DefineGUI(SpriteAnimator* zombie, AnimationManager* animManager)
 	// Dropdown (combo) box to select animation
 	if (ImGui::BeginCombo("Animation", current_item)) // Sets the default value to current_item (which is initially idle)
     {
+        // Loops through all possible dropdown items, declared at the top
         for (int i = 0; i < IM_ARRAYSIZE(items); i++)
         {
-            bool is_selected = (current_item == items[i]);
-            if (ImGui::Selectable(items[i], is_selected))
+            bool is_selected = (current_item == items[i]); // Checks whether the current item is already selected
+            if (ImGui::Selectable(items[i], is_selected)) // Draws each item in the items array, highlighting the currently selected one
             {
-                current_item = items[i];
+                current_item = items[i]; // Used to display the currently selected item, once closed
 
-                std::string animName = "zombie" + std::string(current_item);
-                zombie->setAnimation(animManager->getAnimation(animName));
+                std::string animName = "zombie" + std::string(current_item); // Concatonates the word zombie to the current item, to be used by the animation manager
+                zombie->setAnimation(animManager->getAnimation(animName)); 
             }
+            // Scrolls the list to find the currently selected item, making it visible
             if (is_selected)
-				ImGui::SetItemDefaultFocus();
+				ImGui::SetItemDefaultFocus(); 
         }
 		ImGui::EndCombo();
     }
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     ImGui::End();
 }
