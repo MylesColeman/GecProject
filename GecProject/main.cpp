@@ -8,6 +8,7 @@
 
 #include "TextureManager.h"
 #include "AnimationManager.h"
+#include "SpriteAnimator.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -38,20 +39,11 @@ int main()
     TextureManager textureManager;
     AnimationManager animationManager(textureManager);
     animationManager.configureAnimation("zombieAttack", "Data/Textures/MaleZombie/attack_combined.png", 8);
-    const Animation& zombieAttackAnim = animationManager.getAnimation("zombieAttack");
 
-    float animationSpeed = zombieAttackAnim.timeBetweenFrames;
+    SpriteAnimator zombie;
+    zombie.setAnimation(animationManager.getAnimation("zombieAttack"));
 
-    sf::Sprite zombieSprite(*zombieAttackAnim.texture);
-    zombieSprite.setPosition({ 100.f, 100.f });
-
-    int currentFrame = 0;
-    int intRectsYPos = 0;
-    
-    zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { zombieAttackAnim.spriteWidth, zombieAttackAnim.spriteHeight })); // Sets the initial frame
-
-    // To update the sprite
-    sf::Clock animClock;
+    //float animationSpeed = zombieAttackAnim.timeBetweenFrames;  - Fix later
 
     // Clock required by ImGui
     sf::Clock uiDeltaClock;
@@ -75,28 +67,12 @@ int main()
         // The UI gets defined each time
         DefineGUI(&animationSpeed);
 
-        // After the set time, updates to the next sprite
-        if (animClock.getElapsedTime().asSeconds() > animationSpeed)
-        {
-            intRectsYPos += zombieAttackAnim.spriteHeight;
-            currentFrame++;
-
-            // If reached the last frame, loops back around
-            if (currentFrame >= zombieAttackAnim.numFrames)
-            {
-                currentFrame = 0;
-                intRectsYPos = 0;
-            }
-                
-            zombieSprite.setTextureRect(sf::IntRect({ 0, intRectsYPos }, { zombieAttackAnim.spriteWidth, zombieAttackAnim.spriteHeight }));
-
-            animClock.restart();
-        }
+        zombie.update();
 
         // Clear the window
         window.clear();
        
-		window.draw(zombieSprite);
+		window.draw(zombie);
 
         // UI needs drawing last
         ImGui::SFML::Render(window);
